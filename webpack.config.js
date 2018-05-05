@@ -3,16 +3,20 @@ var HtmlWebpackPlugin = require( 'html-webpack-plugin' );
  
 module.exports = {
   entry: './src/index.js',
+  mode: "development",
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'build.js'
+    filename: '[name].js'
   },
   module: {
     rules: [
-      { test: /\.(js)$/, use: 'babel-loader' }
+      { test: /\.(js)$/, exclude: /node_modules/, use: 'babel-loader' },
+      { test: /\.(css)$/, use: 'css-loader' },
+      { test: /\.(pug)$/, use: 'pug-loader' }
     ]
   },
   plugins: [new HtmlWebpackPlugin({
-    template: 'src/index.html'
+    hash: true,
+    template: './src/index.pug'
   })]
 }
