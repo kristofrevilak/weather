@@ -1,22 +1,23 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
+import { Forecast } from "./Forecast";
+import { Image } from "./Image";
+
 let weather = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=Bo2eoe3z7pXFlTeZLRFGkCJXxITS9tSq&q="
 let weather_end = "&details=true"
-
-let img = "https://pixabay.com/api/?key=8814402-dfba581d7d4bbd350ea0d6f8b&q=";
-let img_end = "&image_type=photo&pretty=true";
  
-class App extends Component {
+class Weather extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             error: null,
-            isLoaded: false,
-            weather: [],
-            image: []
+            city: "",
+            key: "",
+            isLoaded: false
         }
+        this.getWeather = this.getWeather.bind(this);
       }
       
       getLocation () {
@@ -25,38 +26,18 @@ class App extends Component {
         }
       }
     
-      getImage (city) {
-        img += city + img_end;
-        console.log(img);
-        fetch(img)
-        .then(res => res.json())
-        .then(
-          (result) => {
-            console.log(result.hits[0]);
-            this.setState({
-              image: result.hits[0]
-            })
-          },
-          (error) => {
-            this.setState({
-              isLoaded: true,
-              error
-            });
-          }
-        )
-      }
-    
       getWeather (position) {
         weather += position.coords.latitude + "%2C" + position.coords.longitude + weather_end;
         fetch(weather)
         .then(res => res.json())
         .then(
           (result) => {
-            const city = result.AdministrativeArea.EnglishName;
+            console.log(result.AdministrativeArea);
             this.setState({
-              weather: result
-            })
-            .then(this.getImage(city));
+              city: result.AdministrativeArea.EnglishName,
+              key: result.Key,
+              isLoaded: true
+            }); 
           },
           (error) => {
             this.setState({
@@ -72,28 +53,28 @@ class App extends Component {
       }
     
       render() {
-        const { error, isLoaded, weather, image } = this.state;
-        if(error){
-          return pug`
-            div
-                h1 Error has happened!
-                p=error
-            `;
+        const {error, city, key, isLoaded} = this.state;
+        if(error) {
+          return (
+            <div>
+              <p>{error}</p>
+            </div>
+          )
         } else if(isLoaded == false){
-          return pug`
-            div
-                h1 Loading.....
-            `;
+          return (
+            <div>
+              <p>Waiting..</p>
+            </div>
+          )
         } else {
-          return pug`
-            div
-                h1 Weather:
-                p=weather
-                h1 Picture:
-                p=image
-            `;
+          return (
+            <div>
+              <Forecast f_key={key}/>
+              <Image city={city}/>
+            </div>
+          )
         }
       }
     }
  
-ReactDOM.render( <App />, document.querySelector( "#app" ) );
+ReactDOM.render( <Weather />, document.querySelector( "#app" ) );
