@@ -12,7 +12,8 @@ module.exports = {
 		rules: [
 			{ test: /\.(js)$/, exclude: /node_modules/, use: "babel-loader" },
 			{ test: /\.(css)$/, use: "css-loader" },
-			{ test: /\.(pug)$/, use: "pug-loader" }
+			{ test: /\.(pug)$/, use: "pug-loader" },
+			// { test: /\.(sass)$/, use: [ { loader: "style-loader"}, {loader: "sass-loader"}, {loader:"css-loader"}] }
 		]
 	},
 	plugins: [new HtmlWebpackPlugin({

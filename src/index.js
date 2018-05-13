@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import { Forecast } from "./Forecast";
 import { Image } from "./Image";
 
+// import './style.sass';
+
 let weather = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=Bo2eoe3z7pXFlTeZLRFGkCJXxITS9tSq&q="
 let weather_end = "&details=true"
  
